@@ -1,8 +1,6 @@
 au WinLeave File\ List cal<SID>LeaveFilePane()
 au WinEnter File\ List cal filepane#Activate()
 
-let g:filepane_drawermode = exists('g:filepane_drawermode') && g:filepane_drawermode
-
 fun filepane#Activate()
 	" If filepane has already been opened, reactivate it.
 	if exists('s:filepane_buf') && bufexists(s:filepane_buf)
@@ -22,8 +20,7 @@ fun filepane#Activate()
 		call s:UpdateFilePane()
 	endif
 
-	let s:opt = {} " Save current options.
-	let s:opt['is'] = &is | let s:opt['hls'] = &hls | let s:opt['cul'] = &cul
+	let s:opt = {'is':&is, 'hls':&hls, 'cul':&cul} " Save current options.
 	setl is nohls cul
 endf
 
@@ -33,6 +30,8 @@ fun s:CreateFilePane()
 	endif
 	to vnew
 	let g:filepane_width = exists('g:filepane_width') ? g:filepane_width : 25
+	let g:filepane_drawermode = !exists('g:filepane_drawermode') || g:filepane_drawermode
+
 	exe 'vert res'.g:filepane_width
 
 	let s:filepane_buf = bufnr('%')
@@ -53,7 +52,6 @@ fun s:CreateFilePane()
 	vno <silent> <buffer> D :cal<SID>DeleteMultipleFiles()<cr>
 
 	nn <silent> <buffer> . :cal<SID>GoToParentDir()<cr>
-	nm <silent> <buffer> - :cd -<bar>cal<SID>UpdateFilePane()<cr>
 	nm <silent> <buffer> ~ :cd ~<bar>cal<SID>UpdateFilePane()<cr>
 	nn <silent> <buffer> <cr> :cal<SID>SelectFile()<cr>
 	nn <silent> <buffer> <space> :cal<SID>ChangeDir()<cr>
@@ -66,11 +64,13 @@ fun s:CreateFilePane()
 	nn <buffer> q <c-w>q
 	nm <buffer> gL p
 	nm <buffer> <2-leftmouse> <cr>
-	nn <buffer> <3-leftmouse> <nul>
-	nn <buffer> <4-leftmouse> <nul>
-	vm d D
-	vm x D
-	nm dd D
+	nm <buffer> <3-leftmouse> <cr>
+	nm <buffer> <4-leftmouse> <cr>
+	nm <buffer> <right> <cr>
+	nm <buffer> <left> .
+	vm <buffer> d D
+	vm <buffer> x D
+	nm <buffer> dd D
 
 	syn match filepaneDir '.*/$' display
 	syn match filepaneExt '.*\.\zs.*$' display
@@ -104,11 +104,11 @@ fun s:UpdateFilePane()
 	winc H
 	exe 'vert res'.g:filepane_width
 
-	let current_dir = fnameescape(substitute(getcwd().'/', '//$', '/', ''))
+	let current_dir = substitute(getcwd().'/', '//$', '/', '')
 
 	let line = s:DisplayFiles(2, current_dir) - 2
 
-	let current_dir = substitute(current_dir, '^'.$HOME, '~', '')
+	let current_dir = substitute(fnameescape(current_dir), '^'.$HOME, '~', '')
 	exe 'setl stl=%<'.current_dir.'%=%l'
 	echo '"'.current_dir.'" '.line.' item'.(line == 1 ? '' : 's')
 
@@ -163,23 +163,31 @@ fun s:SelectFile(...)
 		else
 			let s:expand_dirs[file] = 1
 		endif
-		call s:UpdateFilePane()
-		if empty(globpath(fnameescape(file), '*')) " This is kind of inefficient but oh well
+		let file = substitute(file, '^'.$HOME, '~', '')
+		if globpath(fnameescape(file), '*') == ''
 			redraw
-			echo 'Directory "'.substitute(file, '^'.$HOME, '~', '').'" is empty.'
+			echo 'Directory "'.file.'" is empty.'
+		else
+			let savedview = winsaveview()
+			call s:UpdateFilePane()
+			call winrestview(savedview)
 		endif
 	elseif filereadable(file)
-		let drawermode = g:filepane_drawermode
-		let g:filepane_drawermode = 0
+		let different_file = bufname(winbufnr(winnr('#'))) != file
+		if different_file
+			let drawermode = g:filepane_drawermode
+			let g:filepane_drawermode = 0
+		endif
 		winc p
 
 		if a:0 && a:1 < 3
 			let splitbelow = &sb
-			exe 'let &sb = '.(a:1 == 1).' | sp | let &sb ='.splitbelow
+			exe 'let &sb ='.(a:1 == 1).' | sp | let &sb ='.splitbelow
 		elseif a:0 && a:1 == 3
 			vnew
 		endif
 		exe 'e'.fnameescape(file)
+		if !different_file | return | endif
 		winc p
 		let g:filepane_drawermode = drawermode
 	else
@@ -189,7 +197,9 @@ endf
 
 fun s:GoToParentDir()
 	let bars = matchstr(getline('.'), '^\(| \)*')
-	if bars == ''
+	if getline('.') == '..'
+		call s:ChangeDir()
+	elseif bars == ''
 		call cursor(1, 1)
 	else
 		let orig_pos = line('.')
