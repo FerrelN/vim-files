@@ -19,11 +19,11 @@ fun s:GetFuncName(ft)
 		let funBegin = search('{')
 		let funEnd = searchpair('{', '', '}', 'W')
 		if !exists('funName')
-			let funName = subtitute(getline(funDecl), '\s*{', '', '')
+			let funName = substitute(getline(funDecl), '\s*{', '', '')
 		endif
 	elseif a:ft == 'javascript'
 		let funBegin = search('^\s*function\s\+\w\+\s*(\w*)', 'bWce')
-		let funEnd = searchpair('{', '', '}', 'n')
+		let funEnd = searchpair('*{', '', '}', 'n')
 		let funName = matchstr(getline(funBegin), '\w\+\s*(.*)')
 	elseif a:ft == 'python'
 		" Go to the first line number out of "if:", "while:", etc. statements
@@ -42,6 +42,10 @@ fun s:GetFuncName(ft)
 		let funBegin = search(indent.'def.*:$', 'nbW')
 		let funEnd = search(indent.'\S', 'ncW')
 		let funName = matchstr(getline(funBegin), '\w\+(.*)')
+		if funEnd == 0 " If no more non-indented text is found the function
+		               " must go to the EOF.
+			let funEnd = line('$') + 1
+		endif
 	elseif a:ft == 'vim'
 		let funBegin = search('^\s*\<fu\%[nction]\>', 'bW')
 		let funEnd = searchpair('^\s*\<fu\%[nction]\>', '', '^\s*\<endf\%[unction]\>')
