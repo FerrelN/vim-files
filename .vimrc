@@ -1,13 +1,10 @@
 " Author: Michael Sanders (msanders42 [at] gmail [dot] com)
 
-" ino <c-space> <c-x><c-o>
-" ino <Nul> <C-x><C-o>
 set shm=atI                 " Disable intro screen
 set lazyredraw              " Don't redraw screen during macros
 set ttyfast                 " Improves redrawing for newer computers
 set nobk nowb noswf         " Disable backup
 set timeoutlen=500          " Lower timeout for mappings
-set report=0                " Always report when lines are changed
 set history=50              " Only store past 50 commands
 set undolevels=150          " Only undo up to 150 times
 set titlestring=%f title    " Display filename in terminal window
@@ -33,8 +30,8 @@ if has('gui_running')
 	set guioptions=haMR " Disable default menus (I've defined my own in my .gvimrc)
 	set guifont=Deja\ Vu\ Sans\ Mono:h12
 	set columns=100 lines=38 fuoptions=maxvert,maxhorz " Default window size
-	set mousefocus " Set splits to automatically activate when moused over
 else
+	" Enable "+y (copy to clipboard) support on OS X
 	vno <silent> "+y :<c-u>cal<SID>Copy()<cr>
 	vm "+Y "+y
 	fun s:Copy()
@@ -291,11 +288,20 @@ fun s:DefaultMake()
 	endif
 endf
 nn <silent> <c-k> :cal<SID>DefaultMake()<cr>
+fun s:AppendSemicolon()
+	if pumvisible()
+		call feedkeys("\<esc>a", 'n')
+		call feedkeys(';;')
+	elseif getline('.') !~ ';$'
+		call setline('.', getline('.').';')
+	endif
+	return ''
+endf
 
 if &cp | finish | endif " Vi-compatible mode doesn't seem to like autocommands
 aug vimrc
 	au!
-	au FileType c,objc,sh,python,scheme,html,xhtml,xml
+	au FileType c,objc,cpp,sh,python,scheme,haskell,html,xhtml,xml,tex
 	          \ nn <buffer> <silent> ,r :w<bar>lcd %:p:h<bar>mak!<cr>
 
 	" Use Bwana.app to open man pages in browser.
@@ -304,11 +310,11 @@ aug vimrc
 	au FileType c,objc,sh set keywordprg=gman
 
 	" Shortcut for typing a semicolon at the end of a line
-	au FileType c,objc,cpp ino <buffer> <silent> ;; <c-o>:cal setline('.', getline('.').';')<cr>
+	au FileType c,objc,cpp ino <buffer> <silent> ;; <c-r>=<SID>AppendSemicolon()<cr>
 	au FileType c nn <buffer> <silent> ,A :cal<SID>AlternateFile('c')<cr>
 	" compile.sh is a simple shell script I made for compiling a C/Obj-C
 	" program with gcc & running it in a new window in Terminal.app
-	au FileType c,objc setl cin
+	au FileType c,objc,cpp setl cin
 	                     \  mp=compile.sh\ \"%:p\"\ \"%\"\ \-\q\ -\w
 
 	" Functions for converting plist files (can be binary but have xml syntax)
@@ -316,6 +322,8 @@ aug vimrc
 
 	au FileType scheme setl et sts=2 makeprg=csi\ -s\ \"%:p\"
 	au FileType python setl et sts=4 makeprg=python\ -t\ \"%:p\"
+	au FileType haskell setl et sts=4 makeprg=ghci\ \"%:p\"
+	au FileType tex setl makeprg=latexpreview.sh\ \"%:p\"
 
 	" Automatically make shell & python scripts executable if they aren't already
 	" when saving file
@@ -330,6 +338,7 @@ aug vimrc
 	                        \| vno <buffer> <c-b> c<strong></strong><esc>9hp
 	                        \| vno <buffer> <c-e> c<em></em><esc>5hp
 	                        \| setl makeprg=open\ -a\ safari\ %:p
+
 
 	" Look up documentation under :help instead of man for .vim files
 	au FileType vim,help let&l:kp=':help'
