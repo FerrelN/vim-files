@@ -1,37 +1,43 @@
 " Author: Michael Sanders (msanders42 [at] gmail [dot] com)
+" Note: These are just my (very particular) preferences -- they may not be
+"       applicable to your setup.
 
-set shm=atI                 " Disable intro screen
-set lazyredraw              " Don't redraw screen during macros
-set ttyfast                 " Improves redrawing for newer computers
-set nobk nowb noswf         " Disable backup
-set timeoutlen=500          " Lower timeout for mappings
-set history=50              " Only store past 50 commands
-set undolevels=150          " Only undo up to 150 times
-set titlestring=%f title    " Display filename in terminal window
-set rulerformat=%l:%c ruler " Display current column/line in bottom right
-set showcmd                 " Show incomplete command at bottom right
-set splitbelow              " Open new split windows below current
-set bs=2                    " Allow backspacing over anything
-set wrap linebreak          " Automatically break lines
-set pastetoggle=<f2>        " Use <f2> to paste in text from other apps
-set wildmode=full wildmenu  " Enable command-line tab completion
+set shm=atI                " Disable intro screen
+set lazyredraw             " Don't redraw screen during macros
+set ttyfast                " Improves redrawing for newer computers
+set nobk nowb noswf        " Disable backup
+set timeoutlen=500         " Lower timeout for mappings
+set history=100            " Only store past 100 commands
+set undolevels=150         " Only undo up to 150 times
+set titlestring=%f title   " Display filename in terminal window
+set ruf=%l:%c ruler        " Display current column/line in bottom right
+set showcmd                " Show incomplete command at bottom right
+set splitbelow             " Open new split windows below current
+set bs=2                   " Allow backspacing over anything
+set wrap linebreak         " Automatically break lines
+set pastetoggle=<f2>       " Use <f2> to paste in text from other apps
+set wildmode=full wildmenu " Enable command-line tab completion
+set completeopt=menu       " Don't show extra info on completions
 set wildignore+=*.o,*.obj,*.pyc,*.DS_Store,*.db " Hide irrelevent matches
-set completeopt=menu        " Don't show extra info on completions
-set ignorecase smartcase    " Only be case sensitive when search contains uppercase
-set gdefault                " Assume /g flag on :s searches
-set hidden                  " Allow hidden buffers
-set mouse=a                 " Enable mouse support
-set enc=utf-8
-set nofoldenable
-ru macros/matchit.vim       " Enable extended % matching
+set ignorecase smartcase   " Only be case sensitive when search has uppercase
+set gdefault               " Assume /g flag on :s searches
+set hidden                 " Allow hidden buffers
+set mouse=nchr             " Enable mouse support, unless in insert mode
+set enc=utf-8              " Enable unicode support
+set nofoldenable           " Disable folding
+ru macros/matchit.vim      " Enable extended % matching
 
 if has('gui_running')
 	set guicursor=a:blinkon0 " Disable blinking cursor
-	set guioptions=haMR " Disable default menus (I've defined my own in my .gvimrc)
-	set guifont=Deja\ Vu\ Sans\ Mono:h12
-	set columns=100 lines=38 fuoptions=maxvert,maxhorz " Default window size
-else
-	" Enable "+y (copy to clipboard) support on OS X
+	set guioptions=haMR " Disable default menus (I've defined my own
+	                    "                        in my .gvimrc)
+	set columns=100 lines=38 " Default window size
+
+	if has('mac') " Macvim-only options
+		set fuoptions=maxvert,maxhorz
+	endif
+elseif has('mac')
+	" Enable "+y (copy to clipboard) on OS X
 	vno <silent> "+y :<c-u>cal<SID>Copy()<cr>
 	vm "+Y "+y
 	fun s:Copy()
@@ -50,13 +56,17 @@ set ai ts=4 sw=4
 set t_Co=16 " Enable 16 colors in Terminal
 syntax on
 color slate " My color scheme, adopted from TextMate
-set hls     " Highlight search terms
+set hls " Highlight search terms
 if &diff | syntax off | endif " Turn syntax highlighting off for diff
 
 " Plugin Settings
 let snips_author     = 'Michael Sanders'
 let bufpane_showhelp = 0
 let objc_man_key     = "\<c-l>"
+
+" Highlight constants in Python
+let python_highlight_numbers = 1
+let python_highlight_exceptions = 1
 
 " Correct some spelling mistakes
 ia teh the
@@ -101,7 +111,7 @@ no gP "0P
 nn Q <Nop>
 " gj/gk treat wrapped lines as separate
 " (i.e. you can move up/down in one wrapped line)
-" I like that behavior better, so I invert the keys.
+" I like that behavior better, so I inverted the keys.
 nn j gj
 nn k gk
 nn gj j
@@ -116,28 +126,23 @@ nn Y y$
 nn + <c-a>
 nn - <c-x>
 " Add a blank line while keeping cursor position
-nn <silent> <c-o> :pu_ <bar> cal repeat#set("\<c-o>")<cr>k
+nn <silent> <c-o> :pu_<bar>cal repeat#set("\<c-o>")<cr>k
 " Keep traditional <c-o> functionality
 nn ,o <c-o>
 " Easier way to navigate windows
 nm , <c-w>
 nn ,, <c-w>p
 nn ,W <c-w>w
-nn ,n :vnew<cr>
 nn ,w :w<cr>
 nn ,x :x<cr>
 " Switch to alternate window (mnemonic: ,alternate)
 nn ,a <c-^>
 " Switch to current dir
 nn ,D :lcd %:p:h<cr>
-" Hide/show line numbers (useful for copying & pasting)
-nn <silent> ,# :se invnumber<cr>
 " Highlight/unhighlight lines over 80 columns
-nn ,H :cal<SID>ToggleLongLineHL()<cr>
+nn ,H :<c-u>cal<SID>ToggleLongLineHL()<cr>
 " Turn off search highlighting
 nn <silent> <c-n> :noh<cr>
-" List whitespace
-nn <silent> ,<space>  :se nolist!<cr>
 nn <silent> ,R :cal<SID>RemoveWhitespace()<cr>
 " Make c-g show full path/buffer number too
 nn <c-g> 2<c-g>
@@ -165,8 +170,6 @@ xno * :<c-u>cal<SID>VisualSearch()<cr>/<cr>
 xno # :<c-u>cal<SID>VisualSearch()<cr>?<cr>
 " Pressing backspace in visual mode deletes to black hole register
 xno <bs> "_x
-" Pressing gn in visual mode counts characters in selection
-xno gn :<c-u>cal<SID>CountChars()<cr>
 
 " Easier navigation in insert mode
 ino <silent> <c-b> <c-o>b
@@ -192,7 +195,7 @@ fun! s:ToggleLongLineHL()
 		let w:overLength = matchadd('ErrorMsg', '.\%>80v', 0)
 		echo 'Long lines highlighted'
 	else
-		cal matchdelete(w:overLength)
+		call matchdelete(w:overLength)
 		unl w:overLength
 		echo 'Long lines unhighlighted'
 	endif
@@ -204,17 +207,9 @@ fun! s:VisualSearch()
   let @" = old
 endf
 
-fun! s:CountChars()
-	let old = @"
-	sil! norm! gvy
-	let l = len(@")
-	echo l > 1 ? 'There were '.l.' characters in the selection.'
-			\  : 'There was 1 character in the selection.'
-	let @" = old
-endf
-
 " This is a modified version of something I found on the Vim wiki.
 " It allows you to align a selection by typing ":Align {pattern}<cr>".
+" NOTE: It is still very buggy.
 com! -nargs=? -range Align <line1>,<line2>cal<SID>Align('<args>')
 xno <silent> ,a :Align<cr>
 fun! s:Align(regex) range
@@ -267,7 +262,7 @@ fun! s:RemoveWhitespace()
 	endif
 endf
 
-fun s:AlternateFile(ext)
+fun! s:AlternateFile(ext)
 	let path = expand('%:p:r').'.'.(expand('%:e') == a:ext ? 'h' : a:ext)
 	if filereadable(path)
 		exe 'e'.fnameescape(path)
@@ -276,7 +271,7 @@ fun s:AlternateFile(ext)
 	endif
 endf
 
-fun s:DefaultMake()
+fun! s:DefaultMake()
 	if !exists('b:old_make')
 		let b:old_make = &makeprg
 		setl makeprg=make
@@ -322,11 +317,11 @@ aug vimrc
 
 	au FileType scheme setl et sts=2 makeprg=csi\ -s\ \"%:p\"
 	au FileType python setl et sts=4 makeprg=python\ -t\ \"%:p\"
-	au FileType haskell setl et sts=4 makeprg=ghci\ \"%:p\"
+	au FileType haskell setl et sts=2 makeprg=ghci\ \"%:p\"
 	au FileType tex setl makeprg=latexpreview.sh\ \"%:p\"
 
-	" Automatically make shell & python scripts executable if they aren't already
-	" when saving file
+	" Automatically make shell & python scripts executable if they aren't
+	" already when saving.
 	au BufWritePost *.\(sh\|py\) if !executable("'%:p'")|exe "sil !chmod a+x '%'"|en
 	au FileType sh setl mp='%:p'
 	au FileType sh,python setl ar " Automatically read file when permissions are changed
