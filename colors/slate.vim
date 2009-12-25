@@ -39,17 +39,17 @@ hi clear
 let colors_name = 'slate'
 
 " General colors
-hi Normal		guifg=#F8F8F8	guibg=#12384B	gui=none
-hi NonText		guifg=#A3FEFE					gui=none	ctermfg=blue
+hi Normal		guifg=#F8F8F8	guibg=#12384B	gui=NONE
+hi NonText		guifg=#A3FEFE					gui=NONE	ctermfg=blue
 
-hi Cursor		guifg=none		guibg=#8BA7A7
+hi Cursor		guifg=NONE		guibg=#8BA7A7
 hi LineNr		guifg=#B0B3B9					gui=bold	ctermfg=darkgray						cterm=bold
 
-hi VertSplit	guifg=#F8F8F8	guibg=#0F2130	gui=none	ctermfg=lightgray		ctermbg=black	cterm=none
+hi VertSplit	guifg=#F8F8F8	guibg=#0F2130	gui=NONE	ctermfg=lightgray		ctermbg=black	cterm=NONE
 
 hi Visual		guibg=#B0C3DA														ctermbg=cyan
 
-hi Title		guifg=#F1B356	guibg=none					ctermfg=magenta			ctermbg=none
+hi Title		guifg=#F1B356	guibg=NONE					ctermfg=magenta			ctermbg=NONE
 hi WildMenu		guifg=#0F2130	guibg=#B0B3B9				ctermfg=black			ctermbg=lightgray
 hi ErrorMsg		guifg=#F8F8F8	guibg=#D22613	gui=bold	ctermfg=lightgray		ctermbg=darkred	cterm=bold
 hi WarningMsg	guifg=#F4EF82	guibg=#0F2130	gui=bold	ctermfg=yellow			ctermbg=black   cterm=bold
@@ -57,15 +57,15 @@ hi WarningMsg	guifg=#F4EF82	guibg=#0F2130	gui=bold	ctermfg=yellow			ctermbg=blac
 hi ModeMsg		guifg=#B0B3B9	guibg=#0F2130	gui=bold	ctermfg=lightgray		ctermbg=black	cterm=bold
 
 if version >= 700 " Vim 7 specific colors
-  hi CursorLine					guibg=#0F2130										ctermbg=black	cterm=none
+  hi CursorLine					guibg=#0F2130										ctermbg=black	cterm=NONE
   hi! link CursorColumn CursorLine
   hi MatchParen	guifg=#0F2130	guibg=#B0B3B9					ctermfg=black		ctermbg=lightgray
-  hi Search		guifg=none		guibg=none		gui=inverse		ctermfg=none		ctermbg=none	cterm=inverse
+  hi Search		guifg=NONE		guibg=NONE		gui=inverse		ctermfg=NONE		ctermbg=NONE	cterm=inverse
 endif
 
 hi Pmenu		guifg=#000000	guibg=#F8F8F8					ctermfg=black		ctermbg=lightgray
-hi PmenuSbar	guifg=#8A95A7	guibg=#F8F8F8	gui=none		ctermfg=darkcyan	ctermbg=lightgray	cterm=none
-hi PmenuThumb	guifg=#F8F8F8	guibg=#8A95A7	gui=none		ctermfg=lightgray	ctermbg=darkcyan	cterm=none
+hi PmenuSbar	guifg=#8A95A7	guibg=#F8F8F8	gui=NONE		ctermfg=darkcyan	ctermbg=lightgray	cterm=NONE
+hi PmenuThumb	guifg=#F8F8F8	guibg=#8A95A7	gui=NONE		ctermfg=lightgray	ctermbg=darkcyan	cterm=NONE
 
 " Syntax highlighting
 hi Comment		guifg=#2C9ADE					gui=italic		ctermfg=darkblue
@@ -74,15 +74,15 @@ hi String		guifg=#7CDE53									ctermfg=darkgreen
 hi Keyword		guifg=#ffa705									ctermfg=darkmagenta
 hi PreProc		guifg=#f1994a									ctermfg=magenta
 
-hi Todo			guifg=#abc4dd	guibg=none						ctermfg=cyan	ctermbg=none
+hi Todo			guifg=#abc4dd	guibg=NONE						ctermfg=cyan	ctermbg=NONE
 hi Constant		guifg=#fa6870									ctermfg=red
 
-hi Identifier	guifg=#f1994a									ctermfg=magenta							cterm=none
-hi Type			guifg=#f5f16e					gui=none		ctermfg=yellow
-hi Statement	guifg=#f1994a					gui=none		ctermfg=magenta
+hi Identifier	guifg=#f1994a									ctermfg=magenta							cterm=NONE
+hi Type			guifg=#f5f16e					gui=NONE		ctermfg=yellow
+hi Statement	guifg=#f1994a					gui=NONE		ctermfg=magenta
 
 hi Special		guifg=#84f796									ctermfg=green
-hi Delimiter	guifg=#f1994a					gui=none		ctermfg=magenta
+hi Delimiter	guifg=#f1994a					gui=NONE		ctermfg=magenta
 
 hi  link Number         Constant
 hi! link StatusLine     VertSplit
