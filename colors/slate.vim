@@ -1,13 +1,17 @@
 " Author:      Michael Sanders (msanders42 [at] gmail [dot] com)
 " Description: Slate colorscheme, adopted from TextMate.
-" Usage:       This colorscheme is meant only for use with vim in Terminal.app or
-"              gvim. I haven't tested it in other terminals. To get it to work in
-"              Terminal.app, first install TerminalColors
+" Usage:       This colorscheme is meant only for use with vim in a terminal
+"              using the following custom colorscheme, or gvim.
+"
+"              To get it to work in Terminal.app, first install TerminalColors
 "              (http://www.culater.net/software/TerminalColors/TerminalColors.php)
 "              and use this theme I made to go along with this color scheme:
-"              http://msanders.homeip.net/Slate.terminal
+"              http://msanders.com/Slate.terminal.
+"
+"              To get it to work in xterm, append the following file to your
+"              ~/.Xresources: http://msanders.com/xterm-slate.txt.
 
-" The following are the preferred 16 colors for Terminal.app:
+" The following are the default 16 colors for Terminal.app:
 "
 "           Colors      Bright Colors
 " Black     #4E4E4E     #7C7C7C
@@ -21,69 +25,68 @@
 
 " These are the modified colors for this theme:
 " 			Colors		Bright Colors
-" Black		#0e2231		#afb2ba (#0e2231 is used solely for highlighting lines)
-" Red		#ed1600		#fc5a56
-" Green		#55e439		#84f796
-" Yellow	#eceb00		#f5f16e
-" Blue		#009be7		#84ffff
-" Magenta	#ffa705		#f1994a (magenta == orange now)
-" Cyan		#8696aa		#abc4dd
-" White		#f8f8f8		#ffffff
+" Black		#0F2130		#B0B3B9
+" Red		#D22613		#F96795
+" Green		#7CDE53		#A0F2A0
+" Yellow	#EBE645		#F4EF82
+" Blue		#2C9ADE		#A3FEFE
+" Magenta	#FFA705		#F1B356 (magenta == orange now)
+" Cyan		#8A95A7		#B0C3DA
+" White		#F8F8F8		#FFFFFF
 
 set bg=dark
 hi clear
 let colors_name = 'slate'
 
 " General colors
-hi Normal		guifg=#f8f8f8	guibg=#12384b gui=none
-hi NonText		guifg=#84ffff	gui=none					ctermfg=blue
+hi Normal		guifg=#F8F8F8	guibg=#12384B	gui=none
+hi NonText		guifg=#A3FEFE					gui=none	ctermfg=blue
 
-hi Cursor		guifg=NONE		guibg=#8ba7a7
-hi LineNr		guifg=#afb2ba	gui=bold					ctermfg=darkgray				cterm=bold
+hi Cursor		guifg=none		guibg=#8BA7A7
+hi LineNr		guifg=#B0B3B9					gui=bold	ctermfg=darkgray						cterm=bold
 
-hi VertSplit	guifg=#f8f8f8	guibg=#0e2231	gui=none	ctermfg=gray	ctermbg=black	cterm=none
+hi VertSplit	guifg=#F8F8F8	guibg=#0F2130	gui=none	ctermfg=lightgray		ctermbg=black	cterm=none
 
-hi Visual		guibg=#abc4dd	ctermbg=cyan
+hi Visual		guibg=#B0C3DA														ctermbg=cyan
 
-hi Title		guifg=#f1994a	guibg=NONE		ctermfg=magenta ctermbg=NONE
-hi WildMenu		guifg=#0e2231	guibg=#afb2ba	ctermfg=black	ctermbg=gray
-hi ErrorMsg		guifg=#f8f8f8	guibg=#ed1600	gui=bold		ctermfg=gray	ctermbg=darkred	cterm=bold
-hi WarningMsg	guifg=#f5f16e	guibg=#0e2231	gui=bold		ctermfg=yellow	ctermbg=black   cterm=bold
+hi Title		guifg=#F1B356	guibg=none					ctermfg=magenta			ctermbg=none
+hi WildMenu		guifg=#0F2130	guibg=#B0B3B9				ctermfg=black			ctermbg=lightgray
+hi ErrorMsg		guifg=#F8F8F8	guibg=#D22613	gui=bold	ctermfg=lightgray		ctermbg=darkred	cterm=bold
+hi WarningMsg	guifg=#F4EF82	guibg=#0F2130	gui=bold	ctermfg=yellow			ctermbg=black   cterm=bold
 
-hi ModeMsg		guifg=#afb2ba	guibg=#0e2231	gui=bold		ctermfg=gray	ctermbg=black	cterm=bold
+hi ModeMsg		guifg=#B0B3B9	guibg=#0F2130	gui=bold	ctermfg=lightgray		ctermbg=black	cterm=bold
 
 if version >= 700 " Vim 7 specific colors
-  hi CursorLine		guibg=#0e2231									ctermbg=black	cterm=none
+  hi CursorLine					guibg=#0F2130										ctermbg=black	cterm=none
   hi! link CursorColumn CursorLine
-  hi MatchParen		guifg=#0e2231	guibg=#afb2ba	ctermfg=black	ctermbg=gray
-  hi Search			guifg=NONE		guibg=NONE		gui=inverse		ctermfg=none	ctermbg=none	cterm=inverse
-en
+  hi MatchParen	guifg=#0F2130	guibg=#B0B3B9					ctermfg=black		ctermbg=lightgray
+  hi Search		guifg=none		guibg=none		gui=inverse		ctermfg=none		ctermbg=none	cterm=inverse
+endif
 
-hi Pmenu			guifg=#000000	guibg=#f8f8f8				ctermfg=black		ctermbg=gray
-hi PmenuSbar		guifg=#8696aa	guibg=#f8f8f8	gui=none	ctermfg=darkcyan	ctermbg=gray	 cterm=none
-hi PmenuThumb		guifg=#f8f8f8	guibg=#8696aa	gui=none	ctermfg=gray		ctermbg=darkcyan cterm=none
+hi Pmenu		guifg=#000000	guibg=#F8F8F8					ctermfg=black		ctermbg=lightgray
+hi PmenuSbar	guifg=#8A95A7	guibg=#F8F8F8	gui=none		ctermfg=darkcyan	ctermbg=lightgray	cterm=none
+hi PmenuThumb	guifg=#F8F8F8	guibg=#8A95A7	gui=none		ctermfg=lightgray	ctermbg=darkcyan	cterm=none
 
 " Syntax highlighting
-hi Comment			guifg=#009be7	gui=italic		ctermfg=darkblue
-hi String			guifg=#55e439					ctermfg=darkgreen
+hi Comment		guifg=#2C9ADE					gui=italic		ctermfg=darkblue
+hi String		guifg=#7CDE53									ctermfg=darkgreen
 
-hi Keyword			guifg=#ffa705					ctermfg=darkmagenta
-hi PreProc			guifg=#f1994a					ctermfg=magenta
+hi Keyword		guifg=#ffa705									ctermfg=darkmagenta
+hi PreProc		guifg=#f1994a									ctermfg=magenta
 
-hi Todo				guifg=#abc4dd	guibg=NONE		ctermfg=cyan	ctermbg=none
-hi Constant			guifg=#fa6870					ctermfg=red
+hi Todo			guifg=#abc4dd	guibg=none						ctermfg=cyan	ctermbg=none
+hi Constant		guifg=#fa6870									ctermfg=red
 
-hi Identifier		guifg=#f1994a					ctermfg=magenta	cterm=none
-hi Type				guifg=#f5f16e	gui=none		ctermfg=yellow
-hi Statement		guifg=#f1994a	gui=none		ctermfg=magenta
+hi Identifier	guifg=#f1994a									ctermfg=magenta							cterm=none
+hi Type			guifg=#f5f16e					gui=none		ctermfg=yellow
+hi Statement	guifg=#f1994a					gui=none		ctermfg=magenta
 
-hi Special			guifg=#84f796					ctermfg=green
-hi Delimiter		guifg=#f1994a	gui=none		ctermfg=magenta
+hi Special		guifg=#84f796									ctermfg=green
+hi Delimiter	guifg=#f1994a					gui=none		ctermfg=magenta
 
 hi  link Number         Constant
 hi! link StatusLine     VertSplit
 hi! link StatusLineNC   VertSplit
-" hi! link Identifier     Function
 hi! link Question       Special
 hi! link MoreMsg        Special
 hi! link Folded         Normal
@@ -135,8 +138,9 @@ hi link HTML 				NonText
 " JavaScript
 hi link javaScriptNumber	Number
 
-" Obj-C
+" Objc
 hi link objcDirective		Type
+hi objcMethodName ctermfg=darkyellow guifg=#eceb00
 
 " CSS
 hi link cssBraces			Normal
@@ -148,7 +152,7 @@ hi link cssColor			Type
 hi link cssValueInteger		Type
 hi link cssValueNumber		Type
 hi link cssValueLength		Type
-hi cssPseudoClassId guifg=#eceb00 ctermfg=darkyellow
+hi cssPseudoClassId			guifg=#eceb00 ctermfg=darkyellow
 
 hi clear SpellBad
 hi SpellBad ctermfg=red term=underline cterm=underline
@@ -158,4 +162,5 @@ hi clear SpellRare
 hi SpellRare term=underline cterm=underline
 hi clear SpellLocal
 hi SpellLocal term=underline cterm=underline
+
 " vim:noet:sw=4:ts=4:ft=vim
