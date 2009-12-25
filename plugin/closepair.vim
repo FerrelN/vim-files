@@ -116,9 +116,9 @@ fun s:PairQuote(char)
 	let col = col('.') - 1 | let line = getline('.')
 	let currentChar = line[col] | let prevChar = line[col-1]
 	" Treat single quotes inside commands and strings as apostrophes.
-	if a:char == "'" && (currentChar != "'" && s:InStringOrComment(col))
-	 \ || &ft == ''
-		return "'"
+	if a:char == "'" && (currentChar != "'" && s:InStringOrComment(col) || 
+	                     \ &ft == '')
+		return a:char
 	endif
 
 	let c = s:Count(line, a:char)
