@@ -6,10 +6,11 @@
 "              To get it to work in Terminal.app, first install TerminalColors
 "              (http://www.culater.net/software/TerminalColors/TerminalColors.php)
 "              and use this theme I made to go along with this color scheme:
-"              http://msanders.com/Slate.terminal.
+"              http://cloud.github.com/downloads/msanders/vim-files/Slate.terminal.
 "
 "              To get it to work in xterm, append the following file to your
-"              ~/.Xresources: http://msanders.com/xterm-slate.txt.
+"              ~/.Xresources:
+"              http://cloud.github.com/downloads/msanders/vim-files/xterm-slate.txt.
 
 " The following are the default 16 colors for Terminal.app:
 "
